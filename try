@@ -1,0 +1,41 @@
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+class Tree(object):
+    def __init__(self, data, left=None, right=None):
+        self.data = data
+        self.left = left
+        self.right = right
+
+    def __repr__(self):
+        left = None if self.left is None else self.left.data
+        right = None if self.right is None else self.right.data
+        return '(D:{}, L:{}, R:{})'.format(self.data, left, right)
+
+def build_tree_breadth_first(sequence):
+    # Create a list of trees
+    forest = [Tree(x) for x in sequence]
+
+    # Fix up the left- and right links
+    count = len(forest)
+    for index, tree in enumerate(forest):
+        left_index = 2 * index + 1
+        if left_index < count:
+            tree.left = forest[left_index]
+
+        right_index = 2 * index + 2
+        if right_index < count:
+            tree.right = forest[right_index]
+
+    for index, tree in enumerate(forest):
+        logger.debug('[{}]: {}'.format(index, tree))
+    return forest[0]  # root
+
+
+data = [5,4,8,11,13,4,7,2,1]
+root = build_tree_breadth_first(data)
+print ('Root is:', root)
+
+
